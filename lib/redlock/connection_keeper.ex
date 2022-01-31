@@ -40,7 +40,8 @@ defmodule Redlock.ConnectionKeeper do
                               reconnection_attempts: attempts}=state) do
     case Redix.start_link(host: host, port: port, ssl: ssl, database: database,
                           password: auth, sync_connect: true,
-                          exit_on_disconnection: true) do
+                          exit_on_disconnection: true,
+                          timeout: FastGlobal.get(:redlock_conf).redix_timeout) do
       {:ok, pid} ->
         if FastGlobal.get(:redlock_conf).show_debug_logs do
           Logger.debug "<Redlock.ConnectionKeeper:#{host}:#{port}> connected to Redis"

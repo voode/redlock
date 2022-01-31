@@ -13,6 +13,8 @@ defmodule Redlock.Supervisor do
   @default_reconnection_interval_base 300
   @default_reconnection_interval_max 3_000
 
+  @default_redix_timeout 5_000
+
   # default Executor options
   @default_drift_factor 0.01
   @default_max_retry 5
@@ -101,12 +103,15 @@ defmodule Redlock.Supervisor do
                   :retry_interval_max,
                   @default_retry_interval_max)
 
+    redix_timeout = Keyword.get(opts, :redix_timeout, @default_redix_timeout)
+
     FastGlobal.put(:redlock_conf, %{
       drift_factor:        drift_factor,
       max_retry:           max_retry,
       retry_interval_base: retry_interval_base,
       retry_interval_max:  retry_interval_max,
-      show_debug_logs:     show_debug_logs
+      show_debug_logs:     show_debug_logs,
+      redix_timeout:       redix_timeout
     })
 
   end
